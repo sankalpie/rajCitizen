@@ -190,17 +190,20 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       />
       <List>{renderRoutes}</List>
       <MDBox p={2} mt="auto">
-        {/* <MDButton
+        <MDButton
           component="a"
-          // href="https://www.creative-tim.com/product/material-dashboard-pro-react"
           target="_blank"
           rel="noreferrer"
           variant="gradient"
           color={sidenavColor}
           fullWidth
+          onClick={() => {
+            localStorage.clear(); // Clears the local storage
+            window.location.reload(); // Refreshes the page
+          }}
         >
-          AI ChatBot
-        </MDButton> */}
+          LogOut
+        </MDButton>
       </MDBox>
     </SidenavRoot>
   );

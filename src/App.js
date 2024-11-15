@@ -153,11 +153,6 @@ export default function App() {
           isLoggedIn={isLoggedIn}
           setRoleAdmin={setRoleAdmin}
         />
-        <SignUp
-          setIsLoggedIn={setIsLoggedIn}
-          isLoggedIn={isLoggedIn}
-          setRoleAdmin={setRoleAdmin}
-        />
       </ThemeProvider>
     );
   }

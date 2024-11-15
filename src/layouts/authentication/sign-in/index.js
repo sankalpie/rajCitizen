@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
 import Grid from "@mui/material/Grid";
+import CircularProgress from "@mui/material/CircularProgress";
 import MuiLink from "@mui/material/Link";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -14,10 +15,11 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import PropTypes from "prop-types";
 
 function Basic({ setIsLoggedIn, isLoggedIn }) {
-  const [username, setusername] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
@@ -29,6 +31,8 @@ function Basic({ setIsLoggedIn, isLoggedIn }) {
   }, [setIsLoggedIn]);
 
   const handleSignIn = async () => {
+    setLoading(true); // Start loading
+    setError(""); // Clear previous errors
     try {
       const apiUrl = "https://raj-police-backend-test.onrender.com/api/users/login"; // Replace with your actual login API endpoint
       const signInData = {
@@ -39,7 +43,7 @@ function Basic({ setIsLoggedIn, isLoggedIn }) {
       console.log(response.data);
 
       if (response.status === 200) {
-        // Login successful, you may redirect or show a success message
+        // Login successful
         alert("Login successful!");
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", response.data.role);
@@ -50,6 +54,8 @@ function Basic({ setIsLoggedIn, isLoggedIn }) {
     } catch (error) {
       console.error("Error signing in:", error);
       setError("Internal Server Error. Please try again later.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -84,10 +90,10 @@ function Basic({ setIsLoggedIn, isLoggedIn }) {
             <MDBox mb={2}>
               <MDInput
                 type="text"
-                label="username"
+                label="Username"
                 fullWidth
                 value={username}
-                onChange={(e) => setusername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </MDBox>
             <MDBox mb={2}>
@@ -117,24 +123,10 @@ function Basic({ setIsLoggedIn, isLoggedIn }) {
                 color="info"
                 fullWidth
                 onClick={handleSignIn}
+                disabled={loading} // Disable the button when loading
               >
-                Sign in
+                {loading ? <CircularProgress size={24} color="inherit" /> : "Sign in"}
               </MDButton>
-            </MDBox>
-            <MDBox mt={3} mb={1} textAlign="center">
-              <MDTypography variant="button" color="text">
-                Don&apos;t have an account?{" "}
-                <MDTypography
-                  component={Link}
-                  to="/authentication/sign-up"
-                  variant="button"
-                  color="info"
-                  fontWeight="medium"
-                  textGradient
-                >
-                  Sign up
-                </MDTypography>
-              </MDTypography>
             </MDBox>
             {error && (
               <MDTypography variant="caption" color="error" mt={1}>
@@ -147,6 +139,7 @@ function Basic({ setIsLoggedIn, isLoggedIn }) {
     </BasicLayout>
   );
 }
+
 Basic.propTypes = {
   setIsLoggedIn: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
